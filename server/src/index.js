@@ -5,7 +5,7 @@ const path = require('path')
 const port = process.env.PORT || 5000
 const mongoose = require('mongoose')
 const { dbConfig } = require('./config/dbConfig')
-
+const router = require('./routes/router')
 mongoose
     .connect(dbConfig.uri, dbConfig.options)
     .then(() => {
@@ -18,6 +18,8 @@ mongoose
 app.get('/', (req, res) => {
   res.send('Hello World')
 })
+
+app.use('/api', router)
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
