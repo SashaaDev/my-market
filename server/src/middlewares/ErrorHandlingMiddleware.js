@@ -1,8 +1,13 @@
-const ApiError = require('../error/ApiError')
+const ApiError = require('../error/ApiError');
 
-module.exports = function (err,req,res,next) {
-  if (err instanceof ApiError) {
-    res.status(err.status).send(err.message)
+module.exports = function (err, req, res, next) {
+  if (res.headersSent) {
+    return next(err);
   }
-  return res.status(500).send('Something went wrong')
-}
+
+  if (err instanceof ApiError) {
+    return res.status(err.status).send(err.message);
+  }
+
+  return res.status(500).send('Something went wrong');
+};

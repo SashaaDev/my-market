@@ -8,10 +8,11 @@ const USER_ROLES = require('../constants/userRoles')
 const register = async (req, res, next) => {
   try {
     const {name, email, password, address, role} = req.body;
-    const existingUser = await User.findOne({email})
+    const existingUser = await User.findOne({email});
     if (existingUser) {
-      throw ApiError.badRequest('User already exists')
+      return next(ApiError.badRequest('User already exists'));
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
@@ -19,28 +20,29 @@ const register = async (req, res, next) => {
       email,
       password: hashedPassword,
       address,
-      role: role || USER_ROLES.CUSTOMER
+      role: role || USER_ROLES.CUSTOMER,
     });
 
     await newUser.save();
-    res.status(201).json({message: 'User registered successfully'})
+    res.status(201).json({message: 'User registered successfully'});
   } catch (error) {
     next(ApiError.internal('Internal Server Error'));
   }
-}
+};
 
 const login = async (req, res, next) => {
   try {
     const {email, password} = req.body;
-    const existingUser = await User.findOne({email})
-    if (existingUser) {
-      throw ApiError.notFound('Invalid email or password')
+    const existingUser = await User.findOne({email});
+
+    if (!existingUser) {
+      return next(ApiError.notFound('Invalid email or password'));
     }
 
-    const isMatch = await bcrypt.compare(password, existingUser.password)
+    const isMatch = await bcrypt.compare(password, existingUser.password);
 
     if (!isMatch) {
-      throw ApiError.notFound('Invalid email or password')
+      return next(ApiError.notFound('Invalid email or password'));
     }
 
     const token = jwt.sign(
@@ -52,52 +54,73 @@ const login = async (req, res, next) => {
         {
           expiresIn: '12h',
         }
-    )
-    res.json(token)
+    );
+
+    res.json(token);
   } catch (error) {
     next(ApiError.internal('Internal Server Error'));
   }
-}
+};
 
-const getUser = async(req,res,next) => {
+
+const getUserById = async (req, res, next) => {
   try {
     const userId = req.params.id;
 
     const user = await User.findById(userId).select('-password');
     if (!user) {
-      throw ApiError.notFound('User not found')
+      return next(ApiError.notFound('User not found'));
     }
-    res.json(user)
+    res.json(user);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return next(ApiError.badRequest('Invalid user ID'));
+    }
+    next(ApiError.internal('Internal Server Error'));
   }
-  catch (error) {
+};
+
+const getAllUsers = async (req, res, next) => {
+  try {
+    const user = await User.find({});
+    if (!user) {
+      return next(ApiError.notFound('User not found11'));
+    }
+    res.json(user);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return next(ApiError.badRequest('Invalid user ID'));
+    }
     next(ApiError.internal('Internal Server Error'));
   }
 }
 
-const updateUser = async(req,res,next) => {
+const updateUser = async (req, res, next) => {
   try {
     const userId = req.params.id;
-    const {name,address,role} = req.body;
-
+    const {name, address, role} = req.body;
+    if (!Object.values(USER_ROLES).includes(role)) {
+      return next(ApiError.badRequest('Invalid role specified'))
+    }
     const updatedUser = await User.findByIdAndUpdate(
         userId,
-        {name,address,role},
-        {new:true}
+        {name, address, role},
+        {new: true}
     ).select('-password');
 
     if (!updatedUser) {
-      throw ApiError.notFound('User not found')
+      next(ApiError.notFound('User not found'))
     }
     res.json(updatedUser)
-  }
-  catch (error) {
+  } catch (error) {
     next(ApiError.internal('Internal Server Error'));
   }
 }
 
-module.exports ={
+module.exports = {
   register,
   login,
-  getUser,
+  getUserById,
+  getAllUsers,
   updateUser
 }
