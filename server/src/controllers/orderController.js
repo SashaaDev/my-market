@@ -23,37 +23,34 @@ const create = async (req, res, next) => {
 
     await newOrder.save();
     res.json(newOrder)
-  }
-  catch (error) {
+  } catch (error) {
     next(ApiError.internal('Internal server error'))
   }
 }
 
-const getAll = async (req,res,next) => {
-  try{
-    const orders = await ORDER.find().populate('products.product');
+const getAll = async (req, res, next) => {
+  try {
+    const orders = await Order.find().populate('products.product');
     res.json(orders);
-  }
-  catch (error) {
-    next(ApiError.internal('Internal server error'))
+  } catch (error) {
+    next(ApiError.internal('Internal server error11'))
   }
 }
 
-const getById = async (req,res,next) => {
-  try{
+const getById = async (req, res, next) => {
+  try {
     const order = await Order.findById(req.params._id);
     if (!order) {
       return next(ApiError.notFound('Order not found'));
     }
     res.json(order);
-  }
-  catch (error) {
+  } catch (error) {
     next(ApiError.internal('Internal server error'))
   }
 }
 
 const updateStatus = async (req, res, next) => {
-  try{
+  try {
     const {status} = req.body;
     const order = await Order.findById(req.params._id);
     if (!order) {
@@ -63,21 +60,19 @@ const updateStatus = async (req, res, next) => {
     order.status = status;
     await order.save();
     res.json(order)
-  }
-  catch (error) {
+  } catch (error) {
     next(ApiError.internal('Internal server error'))
   }
 }
 
 const deleteOne = async (req, res, next) => {
-  try{
+  try {
     const deletedOrder = await Order.findByIdAndDelete(req.params._id);
     if (!deletedOrder) {
       return next(ApiError.notFound('Order not found'))
     }
     res.json({message: 'Order deleted'})
-  }
-  catch (error) {
+  } catch (error) {
     next(ApiError.internal('Internal server error'))
   }
 }

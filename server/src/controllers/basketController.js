@@ -3,21 +3,21 @@ const ApiError = require('../error/ApiError')
 
 const getById = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.userId;
 
     const basket = await Basket.findOne({user: userId}).populate('products.product');
-    if (!bakset) {
-      return next(ApiError.notFound('Not found'))
+    if (!basket) {
+      return next(ApiError.notFound('Basket not found'));
     }
     res.json(basket);
   } catch (error) {
-    next(ApiError.internal('Internal server error'))
+    next(ApiError.internal('Internal server error'));
   }
 }
 
 const create = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.userId;
     const {productId, quantity} = req.body;
     let basket = await Basket.findOne({user: userId})
 
@@ -44,7 +44,7 @@ const create = async (req, res, next) => {
 
 const deleteOne = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.userId;
     const {productId, quantity} = req.body;
 
     let basket = await Basket.findOne({user: userId})
@@ -67,7 +67,7 @@ const deleteOne = async (req, res, next) => {
 
 const deleteAll = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.userId;
     const basket = await Basket.findOneAndUpdate(
         {user: userId},
         {products: []},
@@ -88,5 +88,4 @@ module.exports = {
   create,
   deleteOne,
   deleteAll
-
 }

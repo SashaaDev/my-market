@@ -1,8 +1,8 @@
-const jwt = require('jsonmwebtoken')
+const jwt = require('jsonwebtoken')
 const ApiError = require('../error/ApiError')
 module.exports = function (role) {
   return (req, res, next) => {
-    try{
+    try {
       const authHeader = req.headers['authorization'];
       const token = authHeader && authHeader.split(' ')[1];
 
@@ -17,8 +17,7 @@ module.exports = function (role) {
 
       req.user = decoded;
       next()
-    }
-    catch (error) {
+    } catch (error) {
       next(ApiError.internal('Internal server error'))
     }
   }
