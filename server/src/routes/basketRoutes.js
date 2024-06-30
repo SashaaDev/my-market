@@ -9,3 +9,5 @@ router.get('/', basketController.getById)
 router.post('/create', basketController.create)
 router.post('/remove', basketController.deleteOne)
 router.post('/clear', basketController.deleteAll)
+
+module.exports = router

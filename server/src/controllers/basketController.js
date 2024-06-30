@@ -22,7 +22,7 @@ const create = async (req, res, next) => {
     let basket = await Basket.findOne({user: userId})
 
     if (!basket) {
-      basket = new Basket({ user: userId, totalAmount: 0, products: [] });
+      basket = new Basket({user: userId, totalAmount: 0, products: []});
     }
 
     const productIndex = basket.products.findIndex(
@@ -66,7 +66,7 @@ const deleteOne = async (req, res, next) => {
 }
 
 const deleteAll = async (req, res, next) => {
-  try{
+  try {
     const userId = req.user._id;
     const basket = await Basket.findOneAndUpdate(
         {user: userId},
@@ -79,8 +79,7 @@ const deleteAll = async (req, res, next) => {
 
     await basket.save()
     res.send(200).json(basket)
-  }
-  catch (error) {
+  } catch (error) {
     next(ApiError.internal('Internal server error'))
   }
 }

@@ -5,9 +5,11 @@ const mongoose = require('mongoose');
 const errorHandler = require('./middlewares/ErrorHandlingMiddleware');
 const { dbConfig } = require('./config/dbConfig');
 const router = require('./routes/router');
+const cookieParser = require('cookie-parser');
 
 const port = process.env.PORT || 5000;
-
+app.use(express.json());
+app.use(cookieParser());
 mongoose
     .connect(dbConfig.uri, dbConfig.options)
     .then(() => {
@@ -17,7 +19,7 @@ mongoose
       console.error('Error connecting to MongoDB:', err);
     });
 
-app.use(express.json());
+
 
 app.get('/', (req, res) => {
   res.send('Hello World');
