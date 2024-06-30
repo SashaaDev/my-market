@@ -5,9 +5,9 @@ const basketController = require('../controllers/basketController')
 
 router.use(authMiddleware)
 
-router.get('/', basketController.getById)
-router.post('/create', basketController.create)
-router.post('/remove', basketController.deleteOne)
-router.post('/clear', basketController.deleteAll)
+router.get('/', authMiddleware, basketController.getById)
+router.post('/create', authMiddleware, basketController.create)
+router.post('/remove', authMiddleware, basketController.deleteOne)
+router.post('/clear', authMiddleware, basketController.deleteAll)
 
 module.exports = router
