@@ -63,7 +63,7 @@ const login = async (req, res, next) => {
 };
 
 
-const getUserById = async (req, res, next) => {
+const getById = async (req, res, next) => {
   try {
     const userId = req.params.id;
 
@@ -80,12 +80,9 @@ const getUserById = async (req, res, next) => {
   }
 };
 
-const getAllUsers = async (req, res, next) => {
+const getAll = async (req, res, next) => {
   try {
     const user = await User.find({});
-    if (!user) {
-      return next(ApiError.notFound('User not found11'));
-    }
     res.json(user);
   } catch (error) {
     if (error.name === 'CastError') {
@@ -95,7 +92,7 @@ const getAllUsers = async (req, res, next) => {
   }
 }
 
-const updateUser = async (req, res, next) => {
+const update = async (req, res, next) => {
   try {
     const userId = req.params.id;
     const {name, address, role} = req.body;
@@ -120,7 +117,7 @@ const updateUser = async (req, res, next) => {
 module.exports = {
   register,
   login,
-  getUserById,
-  getAllUsers,
-  updateUser
+  getById,
+  getAll,
+  update
 }
