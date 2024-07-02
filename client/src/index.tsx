@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import UserStore from './store/UserStore';
 import ProductStore from './store/ProductStore';
+// import './style/main_styles.css'
 
 interface IContext {
   user: UserStore;
