@@ -1,46 +1,45 @@
-import React, {useContext, useEffect} from "react";
-import {REGISTRATION_ROUTE, LOGIN_ROUTE} from "../utils/constants";
-import {useForm} from "react-hook-form";
-import {Link, useLocation} from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { REGISTRATION_ROUTE, LOGIN_ROUTE } from "../utils/constants";
+import { useForm } from "react-hook-form";
+import { Link, useLocation } from "react-router-dom";
 import opacityAppear from "./anim";
-// import axios from "axios";
+import axios from "axios";
 import "../index.css";
-// import {toast, ToastContainer} from "react-toastify";
-import {Context} from "../index";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; // убедитесь, что стили Toastify импортированы
+import { Context } from "../index";
 
 const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
-  // const notify = () => toast("Ви зареєструвались!");
+  const notify = () => toast("Ви зареєструвались!");
   const context = useContext(Context);
   const user = context?.user;
-  let state = user?.isAuth;
+
   const onSubmit = async (data: any, e: any) => {
     if (Object.keys(errors).length > 0) {
       e.preventDefault();
       return errors;
     }
-    // notify();
-    //   try {
-    //     console.log(data);
-    //     const response = await axios.post(
-    //         `${process.env.BACKEND_URL}/client`,
-    //         data,
-    //         {
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //         }
-    //     );
-    //
-    //
-    //     console.log('Registration successful:', response.data);
-    //   } catch (error) {
-    //     console.log('Error:', error);
-    //   }
+    notify(); // Вызов оповещения перед отправкой данных
+    console.log(data); // Вывод данных в консоль
+    try {
+      // const response = await axios.post(
+      //   `${process.env.BACKEND_URL}/client`,
+      //   data,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      // console.log('Registration successful:', response.data);
+    } catch (error) {
+      console.log('Error:', error);
+    }
   };
 
   const location = useLocation();
@@ -60,10 +59,8 @@ const LoginPage = () => {
           name="form"
           onSubmit={handleSubmit(onSubmit)}
       >
-        {/*<div className={isLogin ? "login-wrapper" : "reg-wrapper"}>*/}
         <div className="login-wrapper">
-
-          {/*{!user.isAuth ? <ToastContainer/> : null}*/}
+          <ToastContainer />
           <h1 className="title">{isLogin ? "Welcome Back" : "Registration"}</h1>
           <p className={isLogin ? "description" : "description register"}>
             Enter your credentials to continue.
@@ -89,9 +86,9 @@ const LoginPage = () => {
               />
               <i className="fa-solid fa-envelope"></i>
             </div>
-            {/*{errors.login_email && (*/}
-            {/*    <p className="error">{errors.login_email.message}</p>*/}
-            {/*)}*/}
+            {errors.login_email && (
+                <p className="error">{errors.login_email.message as string}</p>
+            )}
 
             <div className="input-wrapper">
               <input
@@ -109,13 +106,17 @@ const LoginPage = () => {
                       value: 30,
                       message: "Password cannot exceed 30 characters",
                     },
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
+                      message: "Email must be a valid gmail address",
+                    },
                   })}
               />
               <i className="fa-solid fa-lock"></i>
             </div>
-            {/*{errors.login_password && (*/}
-            {/*    <p className="error">{errors.login_password.message}</p>*/}
-            {/*)}*/}
+            {errors.login_password && (
+                <p className="error">{errors.login_password.message as string}</p>
+            )}
             <div className="login-wrapper-btn">
               <div className="input-wrapper">
                 <span className="faq">Don`t have an account? </span>

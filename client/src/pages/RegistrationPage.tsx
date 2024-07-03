@@ -2,9 +2,9 @@ import React, {useContext, useEffect} from "react";
 import {REGISTRATION_ROUTE, LOGIN_ROUTE} from "../utils/constants";
 import {useForm} from "react-hook-form";
 import {Link, useLocation} from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 import "../index.css";
-// import {toast, ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import {Context} from "../index";
 import opacityAppear from "./anim";
 
@@ -14,7 +14,7 @@ const RegistrationPage = () => {
     handleSubmit,
     formState: {errors},
   } = useForm();
-  // const notify = () => toast("Ви зареєструвались!");
+  const notify = () => toast("Ви зареєструвались!");
   const context = useContext(Context);
   const user = context?.user;
   let state = user?.isAuth;
@@ -23,24 +23,24 @@ const RegistrationPage = () => {
       e.preventDefault();
       return errors;
     }
-    // notify();
-    //   try {
-    //     console.log(data);
-    //     const response = await axios.post(
-    //         `${process.env.BACKEND_URL}/client`,
-    //         data,
-    //         {
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //         }
-    //     );
-    //
-    //
-    //     console.log('Registration successful:', response.data);
-    //   } catch (error) {
-    //     console.log('Error:', error);
-    //   }
+    notify();
+      try {
+        console.log(data);
+        const response = await axios.post(
+            `${process.env.BACKEND_URL}/client`,
+            data,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+        );
+
+
+        console.log('Registration successful:', response.data);
+      } catch (error) {
+        console.log('Error:', error);
+      }
   };
 
   const location = useLocation();
@@ -62,7 +62,7 @@ const RegistrationPage = () => {
       >
         <div className="reg-wrapper">
 
-          {/*{!user.isAuth ? <ToastContainer/> : null}*/}
+          {!user?.isAuth ? <ToastContainer/> : null}
           <h1 className="title">{isLogin ? "Welcome Back" : "Registration"}</h1>
           <p className={isLogin ? "description" : "description register"}>
             Enter your credentials to continue.
@@ -85,9 +85,9 @@ const RegistrationPage = () => {
               />
               <i className="fa-solid fa-phone"></i>
             </div>
-            {/*{errors.contactNumber && (*/}
-            {/*    <p className="error">{errors.contactNumber.message}</p>*/}
-            {/*)}*/}
+            {errors.contactNumber && (
+                <p className="error">{errors.contactNumber.message as string}</p>
+            )}
 
             <div className="input-wrapper">
               <input
@@ -113,7 +113,7 @@ const RegistrationPage = () => {
               />
               <i className="fa-solid fa-user"></i>
             </div>
-            {/*{errors.fullName && <p className="error">{errors.fullName.message}</p>}*/}
+            {errors.fullName && <p className="error">{errors.fullName.message as string}</p>}
 
             <div className="input-wrapper">
               <input
@@ -139,7 +139,7 @@ const RegistrationPage = () => {
               />
               <i className="fa-solid fa-envelope"></i>
             </div>
-            {/*{errors.email && <p className="error">{errors.email.message}</p>}*/}
+            {errors.email && <p className="error">{errors.email.message as string}</p>}
 
             <div className="input-wrapper">
               <input
@@ -161,9 +161,9 @@ const RegistrationPage = () => {
               />
               <i className="fa-solid fa-lock"></i>
             </div>
-            {/*{errors.password && (*/}
-            {/*    <p className="error">{errors.password.message}</p>*/}
-            {/*)}*/}
+            {errors.password && (
+                <p className="error">{errors.password.message as string}</p>
+            )}
             <div className="input-wrapper">
               <span className="faq">Have an account? </span>
               <Link className="reg" to={LOGIN_ROUTE}> Sign In</Link>

@@ -26,7 +26,7 @@ export default function NavBar() {
   return (
       <>
         <div className="navbar-container">
-          {/*{!user.isAuth ? <ToastContainer /> : null}*/}
+          {/*{!user?.isAuth ? <ToastContainer /> : null}*/}
         </div>
         <div className="container-navbar">
           <div className="navbar" onClick={navAnimation}>
