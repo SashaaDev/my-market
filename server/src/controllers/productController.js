@@ -14,7 +14,7 @@ const getAll = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const product = Product.findOne(req.params._id)
+    const product = await Product.findOne(req.params._id)
     if (!product) {
       return next(ApiError.notFound('Product not found'))
     }
@@ -24,6 +24,15 @@ const getById = async (req, res, next) => {
   }
 }
 
+const getByForeignId = async (res, req, next) => {
+  try {
+    const category = req.query.category;
+    const products = await Product.find(category);
+    res.json(products);
+  } catch (error) {
+    next(ApiError.internal('Internal server error'))
+  }
+}
 const create = async (req, res, next) => {
   try {
     const {title, description, price, category, stock} = req.body;
@@ -36,7 +45,7 @@ const create = async (req, res, next) => {
       title,
       description,
       price,
-      category ,
+      category,
       imageUrl,
       stock
     });
@@ -73,6 +82,7 @@ const deleteOne = async (req, res, next) => {
 module.exports = {
   getAll,
   getById,
+  getByForeignId,
   create,
   update,
   deleteOne

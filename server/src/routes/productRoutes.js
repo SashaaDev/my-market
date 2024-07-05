@@ -7,6 +7,7 @@ const ROLES = require('../constants/userRoles')
 
 router.get('/', productController.getAll)
 router.get('/:id', productController.getById)
+router.get('/:category', productController.getByForeignId);
 router.post('/create', checkRole(ROLES.ADMIN), upload.single('image'), productController.create);
 router.put('/update/:id', checkRole(ROLES.ADMIN), productController.update);
 router.delete('/delete/:id', checkRole(ROLES.ADMIN), productController.deleteOne);
