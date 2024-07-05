@@ -5,7 +5,7 @@ const path = require('path')
 const CATEGORIES = require('../constants/productCategories')
 const getAll = async (req, res, next) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find();
     res.status(201).json(products)
   } catch (error) {
     next(ApiError.internal('Internal server error'))
