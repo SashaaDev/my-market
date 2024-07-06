@@ -13,6 +13,11 @@ const product = new mongoose.Schema({
   createdAt: {type: Date, default: Date.now},
 })
 
+product.statics.findByCategory = function (category) {
+  return this.find({ category });
+};
+
+
 const Product = mongoose.model(MODELS.PRODUCT, product)
 
 module.exports = Product

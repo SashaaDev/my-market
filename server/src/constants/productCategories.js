@@ -1,7 +1,7 @@
 module.exports = {
-  SMARTPHONES: "Smartphones",
-  LAPTOPS: "Laptops",
-  TABLETS: "Tablets",
-  DESKTOP: "Desktops",
+  PHONES: "iPhones",
+  LAPTOPS: "MacBooks",
+  iPads: "iPads",
+  DESKTOP: "iMacs",
   ACCESSORIES: "Accessories"
 }

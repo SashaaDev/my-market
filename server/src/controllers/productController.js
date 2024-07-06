@@ -24,22 +24,29 @@ const getById = async (req, res, next) => {
   }
 }
 
-const getByForeignId = async (res, req, next) => {
+const getByForeignId = async (req, res, next) => {
   try {
-    const category = req.query.category;
-    const products = await Product.find(category);
+    const category = req.params.category;
+    if (!category) {
+      return next(ApiError.badRequest('Category query parameter is required'));
+    }
+    if (!Object.values(CATEGORIES).includes(category)) {
+      return next(ApiError.badRequest('Invalid category specified'));
+    }
+    const products = await Product.findByCategory(category);
     res.json(products);
   } catch (error) {
-    next(ApiError.internal('Internal server error'))
+    next(ApiError.internal('Internal server error'));
   }
-}
+};
+
 const create = async (req, res, next) => {
   try {
-    const {title, description, price, category, stock} = req.body;
+    const {title, description, price, category, imageUrl, stock} = req.body;
     if (!Object.values(CATEGORIES).includes(category)) {
       return next(ApiError.badRequest('Invalid category specified'))
     }
-    const imageUrl = path.join('uploads', req.file.filename);
+    // const imageUrl = path.join('uploads', req.file.filename);
 
     const newProduct = new Product({
       title,
@@ -53,6 +60,7 @@ const create = async (req, res, next) => {
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
+    console.log(error)
     next(ApiError.internal('Internal Server Error'));
   }
 }
