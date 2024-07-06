@@ -24,23 +24,24 @@ const RegistrationPage = () => {
       return errors;
     }
     notify();
-      try {
-        console.log(data);
-        const response = await axios.post(
-            `${process.env.BACKEND_URL}/client`,
-            data,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-        );
+    try {
+      console.log(data);
+      const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/api/user/registration`,
+          // `http://localhost:5000/api/user/registration`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+      );
 
 
-        console.log('Registration successful:', response.data);
-      } catch (error) {
-        console.log('Error:', error);
-      }
+      console.log('Registration successful:', response.data);
+    } catch (error) {
+      console.log('Error:', error);
+    }
   };
 
   const location = useLocation();
@@ -71,31 +72,10 @@ const RegistrationPage = () => {
             <div className="input-wrapper">
               <input
                   type="text"
-                  placeholder="Enter your phone number"
-                  title="Enter your phone number"
-                  inputMode="numeric"
-                  id="contactNumber"
-                  {...register("contactNumber", {
-                    required: "Phone number is required",
-                    pattern: {
-                      value: /^[+]?[0-9]{10,13}$/,
-                      message: "Phone number must be a valid format",
-                    },
-                  })}
-              />
-              <i className="fa-solid fa-phone"></i>
-            </div>
-            {errors.contactNumber && (
-                <p className="error">{errors.contactNumber.message as string}</p>
-            )}
-
-            <div className="input-wrapper">
-              <input
-                  type="text"
                   placeholder="Enter your name"
                   autoComplete="name"
-                  id="fullName"
-                  {...register("fullName", {
+                  id="name"
+                  {...register("name", {
                     required: "Name is required",
                     minLength: {
                       value: 3,
@@ -113,8 +93,22 @@ const RegistrationPage = () => {
               />
               <i className="fa-solid fa-user"></i>
             </div>
-            {errors.fullName && <p className="error">{errors.fullName.message as string}</p>}
-
+            {errors.name && <p className="error">{errors.name.message as string}</p>}
+            <div className="input-wrapper">
+              <input
+                  type="text"
+                  placeholder="Enter your address"
+                  title="Enter your address"
+                  id="address"
+                  {...register("address", {
+                    required: "Address is required",
+                  })}
+              />
+              <i className="fa-solid fa-home"></i>
+            </div>
+            {errors.address && (
+                <p className="error">{errors.address.message as string}</p>
+            )}
             <div className="input-wrapper">
               <input
                   type="email"

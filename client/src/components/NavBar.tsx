@@ -1,32 +1,35 @@
 import React, {useContext} from 'react';
-import {SHOP_ROUTE, LOGIN_ROUTE, BASKET_ROUTE, ADMIN_ROUTE} from "../utils/constants";
+import {ADMIN, ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, MANAGER, SHOP_ROUTE} from "../utils/constants";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {
-  faHouse,
-  faShoppingBag,
-  faSignIn,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import {faHouse, faShoppingBag, faSignIn, faUser, faCrown, faChartBar} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
 import {Context} from "../index";
-
-export default function NavBar() {
+import {observer} from "mobx-react";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+const NavBar = observer(() => {
+  const notify = () => toast.error("Ви не авторизований користувач!");
   const context = useContext(Context)
   const user = context?.user;
+  console.log(user)
   const navAnimation = () => {
     const navElems = document.querySelectorAll('.list-item');
     navElems.forEach((elem) => {
-      // const htmlElem = elem as HTMLElement;
-      // htmlElem.style.animation = 'none';
-      // setTimeout(() => {
-      //   htmlElem.style.animation = 'fadeIn 0.5s ease forwards';
-      // }, 10);
+      const htmlElem = elem as HTMLElement;
+      htmlElem.style.animation = 'none';
+      setTimeout(() => {
+        htmlElem.style.animation = 'fadeIn 0.5s ease forwards';
+      }, 10);
     });
+  };
+  const handleLogout = () => {
+    user?.setIsAuth(false);
+    user?.clearUser();
   };
   return (
       <>
         <div className="navbar-container">
-          {/*{!user?.isAuth ? <ToastContainer /> : null}*/}
+          {!user?.isAuth ? <ToastContainer /> : null}
         </div>
         <div className="container-navbar">
           <div className="navbar" onClick={navAnimation}>
@@ -39,9 +42,8 @@ export default function NavBar() {
               </li>
             </Link>
             <Link
-                // to={user?.isAuth ? BASKET_ROUTE : LOGIN_ROUTE}
-                to={BASKET_ROUTE}
-                // onClick={() => (user.isAuth ? null : notify())}
+                to={user?.isAuth ? BASKET_ROUTE : LOGIN_ROUTE}
+                onClick={() => (user?.isAuth ? null : notify())}
             >
               <li className="list-item">
                 <i className="fa-solid">
@@ -52,16 +54,20 @@ export default function NavBar() {
             </Link>
             {user?.isAuth ? (
                 <>
-                  <Link to={ADMIN_ROUTE}>
-                    <li className="list-item">
-                      <i className="fa-solid">
-                        <FontAwesomeIcon icon={faUser}/>
-                      </i>
-                      <span className="list-item-name">Admin panel</span>
-                    </li>
-                  </Link>
+                  {(user?.user?.role === ADMIN || user?.user?.role === MANAGER) && (
+                      <Link to={ADMIN_ROUTE}>
+                        <li className="list-item">
+                          <i className="fa-solid">
+                            <FontAwesomeIcon icon={user?.user?.role === ADMIN ? faCrown : faChartBar}/>
+                          </i>
+                          <span className="list-item-name">
+                      {user?.user?.role === ADMIN ? "Admin panel" : "Manager panel"}
+                    </span>
+                        </li>
+                      </Link>
+                  )}
                   <Link to={LOGIN_ROUTE}>
-                    <li className="list-item" onClick={() => user?.setIsAuth(false)}>
+                    <li className="list-item" onClick={handleLogout}>
                       <i className="fa-solid">
                         <FontAwesomeIcon icon={faSignIn}/>
                       </i>
@@ -83,4 +89,6 @@ export default function NavBar() {
         </div>
       </>
   );
-}
+});
+
+export default NavBar;

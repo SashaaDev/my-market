@@ -4,7 +4,7 @@ import { authRoutes, publicRoutes } from '../routes';
 
 const AppRouter: React.FC = () => {
   return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div className="loader-wrapper"><div className="loader"></div></div>}>
         <Routes>
           {authRoutes.map(({ path, Component }) => (
               <Route key={path} path={path} element={<Component />} />

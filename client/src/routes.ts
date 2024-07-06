@@ -6,7 +6,8 @@ import {
   BASKET_ROUTE,
   ORDER_ROUTE,
   PRODUCT_ROUTE,
-  ADMIN_ROUTE
+  ADMIN_ROUTE,
+  MANAGER_ROUTE
 } from './utils/constants';
 
 interface RouteType {
@@ -22,6 +23,10 @@ export const authRoutes: RouteType[] = [
   {
     path: BASKET_ROUTE,
     Component:React.lazy(() => import('./pages/BasketPage')),
+  },
+  {
+    path: MANAGER_ROUTE,
+    Component:React.lazy(() => import('./pages/ManagerPage'))
   }
 ];
 

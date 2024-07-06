@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx";
 
+import { jwtDecode } from "jwt-decode";
 interface IUser {
   _id: string;
-  username: string;
-  email: string;
+  name: string;
   role: string;
-  createdAt: Date;
+  email: string;
+  address: string;
 }
 
 export default class UserStore {
@@ -16,14 +17,35 @@ export default class UserStore {
     this._isAuth = false;
     this._user = null;
     makeAutoObservable(this);
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.setUserFromToken(token);
+      this._isAuth = true;
+    }
   }
 
   setIsAuth(bool: boolean) {
     this._isAuth = bool;
   }
 
-  setUser(user: IUser | null) {
+  setUserFromToken(token: string) {
+    const decodedToken: any = jwtDecode(token);
+
+    const user: IUser = {
+      _id: decodedToken.userId,
+      name: decodedToken.name,
+      role: decodedToken.role,
+      email: decodedToken.email,
+      address: decodedToken.address,
+    };
     this._user = user;
+    localStorage.setItem('token', token);
+  }
+
+  clearUser() {
+    this._user = null;
+    localStorage.removeItem('token');
   }
 
   get isAuth() {

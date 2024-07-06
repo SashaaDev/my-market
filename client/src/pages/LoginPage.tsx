@@ -1,43 +1,60 @@
-import React, { useContext, useEffect } from "react";
-import { REGISTRATION_ROUTE, LOGIN_ROUTE } from "../utils/constants";
-import { useForm } from "react-hook-form";
-import { Link, useLocation } from "react-router-dom";
+import React, {useContext, useEffect} from "react";
+import {REGISTRATION_ROUTE, LOGIN_ROUTE, SHOP_ROUTE} from "../utils/constants";
+import {useForm} from "react-hook-form";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import opacityAppear from "./anim";
 import axios from "axios";
 import "../index.css";
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; // убедитесь, что стили Toastify импортированы
-import { Context } from "../index";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import {Context} from "../index";
 
 const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
-  const notify = () => toast("Ви зареєструвались!");
+  const notify = () => toast("Ви увійшли!");
+  const errorNotify = () => toast.error("Сталась помилка!",{
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
   const context = useContext(Context);
   const user = context?.user;
-
+  const navigation = useNavigate()
   const onSubmit = async (data: any, e: any) => {
     if (Object.keys(errors).length > 0) {
       e.preventDefault();
       return errors;
     }
-    notify(); // Вызов оповещения перед отправкой данных
-    console.log(data); // Вывод данных в консоль
+    console.log(data);
     try {
-      // const response = await axios.post(
-      //   `${process.env.BACKEND_URL}/client`,
-      //   data,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-      // console.log('Registration successful:', response.data);
+      const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/api/user/login`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+      );
+      const token = response.data;
+      user?.setIsAuth(true);
+      user?.setUserFromToken(token);
+      console.log(user);
+      navigation(SHOP_ROUTE);
+      notify();
+      console.log('Logged successful:', response.data);
+      localStorage.setItem('token', token);
     } catch (error) {
+      errorNotify();
       console.log('Error:', error);
     }
   };
@@ -60,7 +77,7 @@ const LoginPage = () => {
           onSubmit={handleSubmit(onSubmit)}
       >
         <div className="login-wrapper">
-          <ToastContainer />
+          <ToastContainer/>
           <h1 className="title">{isLogin ? "Welcome Back" : "Registration"}</h1>
           <p className={isLogin ? "description" : "description register"}>
             Enter your credentials to continue.
@@ -71,8 +88,8 @@ const LoginPage = () => {
                   type="email"
                   placeholder="Enter your email"
                   autoComplete="email"
-                  id="login_email"
-                  {...register("login_email", {
+                  id="email"
+                  {...register("email", {
                     required: "Email is required",
                     minLength: {
                       value: 3,
@@ -82,12 +99,16 @@ const LoginPage = () => {
                       value: 30,
                       message: "Email cannot exceed 30 characters",
                     },
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
+                      message: "Email must be a valid gmail address"
+                    }
                   })}
               />
               <i className="fa-solid fa-envelope"></i>
             </div>
-            {errors.login_email && (
-                <p className="error">{errors.login_email.message as string}</p>
+            {errors.email && (
+                <p className="error">{errors.email.message as string}</p>
             )}
 
             <div className="input-wrapper">
@@ -95,8 +116,8 @@ const LoginPage = () => {
                   type="password"
                   placeholder="Enter your password"
                   autoComplete="current-password"
-                  id="login_password"
-                  {...register("login_password", {
+                  id="password"
+                  {...register("password", {
                     required: "Password is required",
                     minLength: {
                       value: 3,
@@ -106,16 +127,12 @@ const LoginPage = () => {
                       value: 30,
                       message: "Password cannot exceed 30 characters",
                     },
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
-                      message: "Email must be a valid gmail address",
-                    },
                   })}
               />
               <i className="fa-solid fa-lock"></i>
             </div>
-            {errors.login_password && (
-                <p className="error">{errors.login_password.message as string}</p>
+            {errors.password && (
+                <p className="error">{errors.password.message as string}</p>
             )}
             <div className="login-wrapper-btn">
               <div className="input-wrapper">
@@ -125,10 +142,12 @@ const LoginPage = () => {
                 </Link>
               </div>
               <div className="input-wrapper">
-                <button className="button" type="submit">
-                  Sign In
-                  <i className="bx bx-right-arrow-alt"></i>
-                </button>
+                {/*<Link to={SHOP_ROUTE}>*/}
+                  <button className="button" type="submit">
+                    Sign In
+                    <i className="bx bx-right-arrow-alt"></i>
+                  </button>
+                {/*</Link>*/}
               </div>
             </div>
           </div>
