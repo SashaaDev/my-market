@@ -1,4 +1,13 @@
-@import "./style/variables.css";
+:root {
+  --highlight: #fb874f;
+  --background:#422e58;
+  --shadow: #faac6d;
+  --descript: #d5bda9;
+  --input-placeholder: #b287a9;
+  --white: #fff;
+  --background-w: #7b5a94;
+  --border-rad: 32px;
+}
 
 * {
   box-sizing: border-box;
@@ -20,6 +29,9 @@ a {
 }
 
 h2 {
+  margin: 0;
+}
+p,h3,h4,h5,h6 {
   margin: 0;
 }
 
@@ -324,7 +336,7 @@ input[type=password] {
 }
 
 .navshop-container, .shop-container {
-  opacity: 0;
+  /*opacity: 0;*/
 }
 
 .navshop-container {
@@ -378,13 +390,31 @@ input[type=password] {
   animation: shopTitleAnim 2s alternate infinite ease-in forwards;
 }
 
-/*product card on shop*/
+.shop-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
 .product-card {
   perspective: 1000px;
   display: grid;
-  place-items: center;
   opacity: 0;
   animation: fadeIn 1s ease-in alternate forwards;
+  cursor: pointer;
+  transition: 0.2s all;
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 .product-card-inner {
@@ -413,28 +443,80 @@ input[type=password] {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
   border-radius: calc(var(--border-rad) - 10px);
   color: var(--shadow);
 }
 
 .product-card-front {
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   transform: rotateY(0deg);
 }
 
+.product-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  z-index: 9;
+}
+
 .product-card-back {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   transform: rotateY(180deg);
+  padding: 0.5em;
+}
+
+.product-card-title {
+  font-size: 1.5em;
+}
+
+.product-card-price-value {
+  font-size: 1.2em;
+  color: var(--highlight);
+  font-weight: 500;
+  font-style: italic;
+}
+
+.product-card-memory-value {
+  font: 1.1em "DejaVu Sans Mono";
+  color: var(--shadow);
 }
 
 .product-card-front > img {
-  max-width: 55%;
+  max-width: 70%;
   border-radius: calc(var(--border-rad) - 10px);
 }
 
 .product-card-description {
   font-size: 0.8em;
   animation: animOpacity 0.5s ease forwards;
+}
+
+.product-card-title-desc {
+  padding: 0.5em 0;
+}
+
+.list-item-bag > .fa-solid {
+  z-index: 9;
+  color: var(--highlight);
+  font-size: 2em;
+  transition: 0.3s all;
+}
+
+.list-item-bag > .fa-solid:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  color: var(--shadow);
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
 /*animation*/

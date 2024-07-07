@@ -15,6 +15,7 @@ const RegistrationPage = () => {
     formState: {errors},
   } = useForm();
   const notify = () => toast("Ви зареєструвались!");
+  const notifyErr = () => toast.error("Помилка реєстрації!");
   const context = useContext(Context);
   const user = context?.user;
   let state = user?.isAuth;
@@ -23,12 +24,10 @@ const RegistrationPage = () => {
       e.preventDefault();
       return errors;
     }
-    notify();
     try {
       console.log(data);
       const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/api/user/registration`,
-          // `http://localhost:5000/api/user/registration`,
           data,
           {
             headers: {
@@ -36,10 +35,10 @@ const RegistrationPage = () => {
             },
           }
       );
-
-
       console.log('Registration successful:', response.data);
+      notify();
     } catch (error) {
+      notifyErr();
       console.log('Error:', error);
     }
   };
@@ -164,7 +163,7 @@ const RegistrationPage = () => {
             </div>
             {/*<div onClick={notify} className="input-wrapper">*/}
             <div className="input-wrapper">
-              <button onClick={() => user?.setIsAuth(true)} className="button" type="submit" id="submit">
+              <button className="button" type="submit" id="submit">
                 Sign Up<i className="bx bx-right-arrow-alt"></i>
               </button>
             </div>

@@ -1,7 +1,7 @@
 module.exports = {
   PHONES: "iPhones",
   LAPTOPS: "MacBooks",
-  iPads: "iPads",
+  TABLETS: "iPads",
   DESKTOP: "iMacs",
   ACCESSORIES: "Accessories"
 }

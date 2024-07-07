@@ -67,15 +67,17 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const updatedProduct = await Product.findOneAndUpdate(req.params._id, req.body, {new: true})
+    const id = req.params.id;
+    const updatedProduct = await Product.findOneAndUpdate({_id: id}, req.body, {new: true});
     if (!updatedProduct) {
-      return next(ApiError.internal('Product not found'))
+      return next(ApiError.internal('Product not found'));
     }
-    res.json(updatedProduct)
+    res.json(updatedProduct);
   } catch (error) {
-    next(ApiError.internal('Internal server error'))
+    next(ApiError.internal('Internal server error'));
   }
-}
+};
+
 const deleteOne = async (req, res, next) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params._id)
