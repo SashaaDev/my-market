@@ -8,13 +8,16 @@ const basketSchema = new mongoose.Schema({
   totalAmount: {type: Number, required: true},
   products: [
     {
-      product: {type: mongoose.Schema.Types.ObjectId, ref: MODELS.PRODUCT, required: true},
+      product: {type: String, ref: MODELS.PRODUCT, required: true},
       quantity: {type: Number, required: true}
     }
   ],
   createdAt: {type: Date, default: Date.now}
 })
 
+basketSchema.statics.findByUser = function (user) {
+  return this.find({ user });
+}
 const Basket = mongoose.model(MODELS.BASKET, basketSchema)
 
 module.exports = Basket

@@ -14,7 +14,8 @@ const getAll = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const product = await Product.findOne(req.params._id)
+    const id = req.params.id
+    const product = await Product.findById(id)
     if (!product) {
       return next(ApiError.notFound('Product not found'))
     }
@@ -46,8 +47,9 @@ const create = async (req, res, next) => {
     if (!Object.values(CATEGORIES).includes(category)) {
       return next(ApiError.badRequest('Invalid category specified'))
     }
-    // const imageUrl = path.join('uploads', req.file.filename);
-
+    if (!imageUrl) {
+      return next(ApiError.badRequest('Image URL is required'));
+    }
     const newProduct = new Product({
       title,
       description,

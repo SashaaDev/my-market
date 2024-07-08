@@ -1,10 +1,10 @@
 const Basket = require('../models/Basket')
+const Product = require('../models/Product')
 const ApiError = require('../error/ApiError')
-
+const mongoose = require('mongoose')
 const getById = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-
     const basket = await Basket.findOne({user: userId}).populate('products.product');
     if (!basket) {
       return next(ApiError.notFound('Basket not found'));
@@ -18,52 +18,63 @@ const getById = async (req, res, next) => {
 const create = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const {productId, quantity} = req.body;
-    let basket = await Basket.findOne({user: userId})
-
-    if (!basket) {
-      basket = new Basket({user: userId, totalAmount: 0, products: []});
+    const { productId, quantity } = req.body;
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
     }
 
-    const productIndex = basket.products.findIndex(
-        item =>
-            item.product.toString() === productId
+    let basket = await Basket.findOneAndUpdate(
+        { user: userId },
+        { $setOnInsert: { user: userId, totalAmount: 0, products: [] } },
+        { upsert: true, new: true }
     );
 
-    productIndex > -1 ?
-        basket.products[productIndex].quantity += quantity
-        :
-        basket.products.push({product: productId, quantity})
+    const productIndex = basket.products.findIndex(item => item.product === productId);
+
+    if (productIndex > -1) {
+      basket.products[productIndex].quantity += quantity;
+    } else {
+      basket.products.push({ product: productId, quantity });
+    }
 
     await basket.save();
-    res.status(200).json(basket)
+    res.status(200).json(basket);
   } catch (error) {
-    next(ApiError.internal('Internal server error'))
+    console.error("Error adding product to basket:", error);
+    next(ApiError.internal('Internal server error'));
   }
-}
+};
 
 const deleteOne = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const {productId, quantity} = req.body;
+    const { productId, quantity } = req.body;
+    let basket = await Basket.findOne({ user: userId });
 
-    let basket = await Basket.findOne({user: userId})
     if (!basket) {
-      return next(ApiError.notFound('Not found'))
+      return next(ApiError.notFound('Basket not found'));
     }
-    const productIndex = basket.products.filter(item => item.products.toString() === productId);
 
-    productIndex > -1 ?
-        basket.products[productIndex].quantity -= quantity
-        :
-        basket.products.splice(productIndex, 1)
+    const productIndex = basket.products.findIndex(item => item.product.toString() === productId);
 
-    await basket.save()
-    res.send(200).json(basket)
+    if (productIndex > -1) {
+      basket.products[productIndex].quantity -= quantity;
+      if (basket.products[productIndex].quantity <= 0) {
+        basket.products.splice(productIndex, 1);
+      }
+    } else {
+      return next(ApiError.notFound('Product not found in basket'));
+    }
+
+    await basket.save();
+    res.status(200).json(basket);
   } catch (error) {
-    next(ApiError.internal('Internal server error'))
+    console.error(error);
+    next(ApiError.internal('Internal server error'));
   }
-}
+};
+
 
 const deleteAll = async (req, res, next) => {
   try {

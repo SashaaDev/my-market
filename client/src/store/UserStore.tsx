@@ -12,10 +12,12 @@ interface IUser {
 export default class UserStore {
   _isAuth: boolean;
   _user: IUser | null;
+  _token: string | null;
 
   constructor() {
     this._isAuth = false;
     this._user = null;
+    this._token = null;
     makeAutoObservable(this);
 
     const token = localStorage.getItem('token');
@@ -40,6 +42,7 @@ export default class UserStore {
       address: decodedToken.address,
     };
     this._user = user;
+this._token = token;
     localStorage.setItem('token', token);
   }
 
@@ -54,5 +57,9 @@ export default class UserStore {
 
   get user() {
     return this._user;
+  }
+
+  get token() {
+    return this._token;
   }
 }
