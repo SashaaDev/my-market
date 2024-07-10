@@ -38,6 +38,8 @@ const create = async (req, res, next) => {
       basket.products.push({ product: productId, quantity });
     }
 
+    basket.totalAmount += product.price * quantity;
+
     await basket.save();
     res.status(200).json(basket);
   } catch (error) {
@@ -59,16 +61,21 @@ const deleteOne = async (req, res, next) => {
     const productIndex = basket.products.findIndex(item => item.product.toString() === productId);
 
     if (productIndex > -1) {
+      const product = await Product.findById(productId);
+      if (!product) {
+        return next(ApiError.notFound('Product not found'));
+      }
       basket.products[productIndex].quantity -= quantity;
+      basket.totalAmount -= product.price * quantity;
       if (basket.products[productIndex].quantity <= 0) {
         basket.products.splice(productIndex, 1);
       }
+
+      await basket.save();
+      res.status(200).json(basket);
     } else {
       return next(ApiError.notFound('Product not found in basket'));
     }
-
-    await basket.save();
-    res.status(200).json(basket);
   } catch (error) {
     console.error(error);
     next(ApiError.internal('Internal server error'));

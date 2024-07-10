@@ -52,7 +52,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         progress: undefined,
         theme: "light",
       });
-    } catch (error: any) { // Explicitly type the error parameter
+    } catch (error: any) {
       console.error("Error adding product to basket:", error.response?.data || error.message);
 
       toast.error("Ошибка добавления товара в корзину", {

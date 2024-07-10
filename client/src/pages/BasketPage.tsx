@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import React, {useEffect, useState, useContext} from 'react';
+import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Context } from '../index';
+import {Context} from '../index';
 import opacityAppear from '../pages/anim';
 import axios from 'axios';
 
@@ -76,6 +76,7 @@ const BasketPage = () => {
 
       setResponse(prevResponse => {
         if (!prevResponse) return null;
+
         const updatedProducts = prevResponse.products.map(item => {
           if (item.product._id === productId) {
             return { ...item, quantity: item.quantity - 1 };
@@ -83,9 +84,12 @@ const BasketPage = () => {
           return item;
         }).filter(item => item.quantity > 0);
 
+        const updatedTotalAmount = updatedProducts.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+
         return {
           ...prevResponse,
-          products: updatedProducts
+          products: updatedProducts,
+          totalAmount: updatedTotalAmount
         };
       });
 
@@ -115,7 +119,7 @@ const BasketPage = () => {
 
   return (
       <>
-        <ToastContainer />
+        <ToastContainer/>
         <div className="container-basket"></div>
         <div className="basket-container">
           <div className="basket">
@@ -124,17 +128,24 @@ const BasketPage = () => {
           <div className="basket-content">
             {response && response.products && response.products.length > 0 ? (
                 response.products.map((item) => (
-                    <div key={item.product._id} className="basket-item">
-                      <h3>{item.product.title}</h3>
-                      <p>Quantity: {item.quantity}</p>
-                      <p>Price: ${item.product.price}</p>
-                      <p>Total: ${(item.product.price * item.quantity).toFixed(2)}</p>
-                      <button className="remove-button" onClick={() => handleRemoveOneProduct(item.product._id)}>Remove One</button>
-                    </div>
-                ))
+                        <>
+                          <div key={item.product._id} className="basket-item">
+                            <h3>{item.product.title}</h3>
+                            <p>Quantity: {item.quantity}</p>
+                            <p>Price: ${item.product.price}</p>
+                            <p>Total: ${(item.product.price * item.quantity).toFixed(2)}</p>
+                            <button className="remove-button"
+                                    onClick={() => handleRemoveOneProduct(item.product._id)}>Remove One
+                            </button>
+                          </div>
+                        </>
+                    )
+                )
             ) : (
                 <div className="basket-empty">Корзина порожня</div>
             )}
+            <p className="total">Total: ${response?.totalAmount.toFixed(2)}</p>
+
           </div>
         </div>
       </>
