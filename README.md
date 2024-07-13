@@ -1,6 +1,3 @@
-Here's a `README.md` file for your Docker Compose setup:
-
-```markdown
 # Supermarket Application
 
 This project consists of a React client and a Node.js server. Docker Compose is used to manage the development environment, including a MongoDB database.
@@ -48,8 +45,8 @@ The `docker-compose.yml` file defines three services: `client`, `server`, and `m
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/supermarket-app.git
-   cd supermarket-app
+   git clone https://github.com/SashaaDev/my-market.git
+   cd my-market
    ```
 
 2. Build and start the containers:
@@ -84,10 +81,3 @@ docker-compose down --volumes
 
 - The `client` service uses the `CHOKIDAR_USEPOLLING=true` environment variable to enable polling for file changes. This is useful for development environments, especially on Docker for Windows and Mac.
 - The `server` service depends on the `mongo` service to ensure that MongoDB is started before the server.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-```
-
-This `README.md` provides an overview of your project, explains the Docker Compose setup, and gives instructions on how to build, run, and manage the services.
