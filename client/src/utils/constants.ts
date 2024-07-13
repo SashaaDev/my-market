@@ -9,3 +9,7 @@ export const MANAGER_ROUTE = '/manager'
 export const ADMIN = 'admin'
 export const MANAGER = 'manager'
 export const CUSTOMER = 'CUSTOMER'
+export const PENDING = 'pending';
+export const SHIPPED = "shipped";
+export const DELIVERED = "delivered";
+export const CANCELED = "canceled"

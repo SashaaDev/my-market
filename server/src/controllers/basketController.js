@@ -18,16 +18,16 @@ const getById = async (req, res, next) => {
 const create = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const { productId, quantity } = req.body;
+    const {productId, quantity} = req.body;
     const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({error: 'Product not found'});
     }
 
     let basket = await Basket.findOneAndUpdate(
-        { user: userId },
-        { $setOnInsert: { user: userId, totalAmount: 0, products: [] } },
-        { upsert: true, new: true }
+        {user: userId},
+        {$setOnInsert: {user: userId, totalAmount: 0, products: []}},
+        {upsert: true, new: true}
     );
 
     const productIndex = basket.products.findIndex(item => item.product === productId);
@@ -35,7 +35,7 @@ const create = async (req, res, next) => {
     if (productIndex > -1) {
       basket.products[productIndex].quantity += quantity;
     } else {
-      basket.products.push({ product: productId, quantity });
+      basket.products.push({product: productId, quantity});
     }
 
     basket.totalAmount += product.price * quantity;
@@ -51,8 +51,8 @@ const create = async (req, res, next) => {
 const deleteOne = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const { productId, quantity } = req.body;
-    let basket = await Basket.findOne({ user: userId });
+    const {productId, quantity} = req.body;
+    let basket = await Basket.findOne({user: userId});
 
     if (!basket) {
       return next(ApiError.notFound('Basket not found'));

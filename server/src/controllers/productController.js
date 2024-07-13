@@ -82,15 +82,18 @@ const update = async (req, res, next) => {
 
 const deleteOne = async (req, res, next) => {
   try {
-    const deletedProduct = await Product.findByIdAndDelete(req.params._id)
+    const { id } = req.params;
+    const deletedProduct = await Product.findByIdAndDelete(id);
     if (!deletedProduct) {
-      return next(ApiError.internal('Product not found'))
+      return res.status(404).json({ message: 'Product not found' });
     }
-    res.json({message: 'Product deleted'});
+    res.status(200).json({ message: 'Product deleted successfully' });
   } catch (error) {
-    next(ApiError.internal('Internal server error'))
+    console.error('Error deleting product:', error);
+    next(ApiError.internal('Internal server error'));
   }
 }
+
 module.exports = {
   getAll,
   getById,

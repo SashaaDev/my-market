@@ -626,6 +626,79 @@ input[type=password] {
   font-size: 1.2rem;
 }
 
+/*admin panel*/
+.container-admin-panel, .container-manager-panel {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.container-admin-panel h1, .container-manager-panel h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--background-w);
+}
+
+.products-section,
+.orders-section {
+  margin-bottom: 40px;
+}
+
+.products-section h2,
+.orders-section h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--background-w);
+}
+
+table {
+  width: 60%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  background-color: var(--background-w);
+  color: var(--shadow);
+  box-shadow: var(--shadow) 0 0 10px;
+}
+
+th,
+td {
+  padding: 10px 0;
+  border: 1px solid ;
+  text-align: center;
+}
+
+th {
+  background-color: var(--background);
+  font-weight: bold;
+}
+tr{
+  transition: all 0.5s ease;
+}
+tr:hover {
+  background-color: var(--background);
+}
+
+td div {
+  margin-bottom: 5px;
+}
+
+.orders-section td {
+  vertical-align: top;
+}
+
+.admin-product-description {
+  width: 400px;
+}
+.admin-product-delete-btn{
+  margin: 0 auto;
+  .fa-solid {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.2s;
+  }
+}
+.admin-product-delete-btn > .fa-solid:hover{
+  color: var(--background-w);
+}
 /*animation*/
 @keyframes fadeIn {
   to {
@@ -765,23 +838,29 @@ input[type=password] {
     width: 170px;
     height: 280px;
   }
+
   .product-card-title {
     font-size: 1.2em;
   }
-  .product-card-front{
+
+  .product-card-front {
     padding: 0.3em;
   }
-  .product-card-back{
+
+  .product-card-back {
     padding: 0.3em;
   }
-  .product-list{
+
+  .product-list {
     gap: 1em;
     width: 100%;
   }
-  .product-card-price-value, .product-card-stock{
+
+  .product-card-price-value, .product-card-stock {
     font-size: 0.8em;
   }
-  .product-card-description{
+
+  .product-card-description {
     font-size: 0.7em;
   }
 }
@@ -845,7 +924,6 @@ input[type=password] {
 @media (max-width: 570px) {
   .basket-item {
     flex-direction: column;
-    /*align-items: flex-start;*/
     gap: 20px;
 
     .basket-item-info {
@@ -856,10 +934,12 @@ input[type=password] {
   .basket-content {
     max-width: 400px;
   }
-  .product-card-title{
+
+  .product-card-title {
     font-size: 1.1em;
   }
-  .product-card-price-value{
+
+  .product-card-price-value {
     font-size: 0.9em;
   }
 
@@ -909,10 +989,11 @@ input[type=password] {
     font-size: 1.8em;
     gap: 20px;
   }
-  .product-list{
+
+  .product-list {
     padding: 5em;
     display: flex;
-    overflow-x:auto;
+    overflow-x: auto;
     gap: 1em;
     width: 100%;
     flex-wrap: wrap;

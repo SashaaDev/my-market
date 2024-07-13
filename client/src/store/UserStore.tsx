@@ -1,6 +1,7 @@
-import { makeAutoObservable } from "mobx";
+import {makeAutoObservable} from "mobx";
 
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
+
 interface IUser {
   _id: string;
   name: string;
@@ -42,7 +43,7 @@ export default class UserStore {
       address: decodedToken.address,
     };
     this._user = user;
-this._token = token;
+    this._token = token;
     localStorage.setItem('token', token);
   }
 

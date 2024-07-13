@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const ApiError = require('../error/ApiError')
-module.exports = function (role) {
+module.exports = function (roles) {
   return (req, res, next) => {
     try {
       const authHeader = req.headers['authorization'];
@@ -11,7 +11,7 @@ module.exports = function (role) {
       }
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
-      if (decoded.role !== role) {
+      if (!roles.includes(decoded.role)) {
         return next(ApiError.forbidden('Access denied'))
       }
 
