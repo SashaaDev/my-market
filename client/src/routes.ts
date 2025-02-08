@@ -7,7 +7,9 @@ import {
   ORDER_ROUTE,
   PRODUCT_ROUTE,
   ADMIN_ROUTE,
-  MANAGER_ROUTE
+  MANAGER_ROUTE,
+  PRODUCT_UPDATE_ROUTE,
+  PRODUCT_CREATE_ROUTE
 } from './utils/constants';
 
 interface RouteType {
@@ -27,6 +29,14 @@ export const authRoutes: RouteType[] = [
   {
     path: MANAGER_ROUTE,
     Component:React.lazy(() => import('./pages/ManagerPage'))
+  },
+  {
+    path: PRODUCT_UPDATE_ROUTE,
+    Component:React.lazy(() => import('./pages/UpdateProductPage'))
+  },
+  {
+    path: PRODUCT_CREATE_ROUTE,
+    Component:React.lazy(() => import('./pages/CreateProductPage'))
   }
 ];
 

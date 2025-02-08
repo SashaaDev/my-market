@@ -2,17 +2,7 @@ import React, { useEffect, useState } from 'react';
 import NavShop from "../components/NavShop";
 import opacityAppear from "./anim";
 import ProductCard from "../components/ProductCard";
-
-interface Product {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  imageUrl: string;
-  stock: number;
-  createdAt: Date;
-}
+import { Product } from "../types";
 
 const ShopPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);

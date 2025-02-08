@@ -13,3 +13,5 @@ export const PENDING = 'pending';
 export const SHIPPED = "shipped";
 export const DELIVERED = "delivered";
 export const CANCELED = "canceled"
+export const PRODUCT_UPDATE_ROUTE = '/product/update/:id';
+export const PRODUCT_CREATE_ROUTE = '/product/create';
